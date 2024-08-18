@@ -1,0 +1,21 @@
+body {
+    min-height: 97vh;
+    font-family: sans-serif;
+    padding: 0 10px;
+}
+
+section {
+    margin: 0 15px;
+}
+
+p {
+    margin: 0;
+}
+
+hr {
+    margin: 0;
+    height:2px;
+    background: black;
+    border: none;
+}
+
