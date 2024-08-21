@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="">
-<head>
-    <link rel="stylesheet" href="css/general.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/product.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" integrity="sha512-Z/def5z5u2aR89OuzYcxmDJ0Bnd5V1cKqBEbvLOiUNWdg9PQeXVvXLI90SE4QOHGlfLqUnDNVAYyZi8UwUTmWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Scandiweb</title>
-
-</head>
+<?php $title = 'Scandiweb';?>
+<?php include 'includes/header.php'; ?>
 
 <body>
 <form method="POST" action="/product/delete">
