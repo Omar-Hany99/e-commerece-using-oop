@@ -1,5 +1,32 @@
-<?php $dest = '../' ?>
-<?php include '../includes/header.php'; ?>
+<?php
+
+declare(strict_types=1);                                 // Use strict types
+$dest = '../';
+include '../includes/header.php';
+include '../../src/bootstrap.php';                       // Include setup file
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $product['sku'] = $_POST['sku'];
+    $product['name'] = $_POST['name'];
+    $product['price'] = $_POST['price'];
+    $product['type'] = $_POST['type'];
+
+    $method_name = 'get'.$product['type'];
+
+    $height = $_POST['height']?? '';
+    $widht = $_POST['widht'] ?? '';
+    $length = $_POST['length'] ?? '';
+    $weight = $_POST['weight'] ?? '';
+
+    $cms->getProduct()->create($product);
+
+    $dvd['id'] = $cms->getProduct()->getLastInsertId();
+    $dvd['size'] = $_POST['size'] ?? '';
+
+    $cms->$method_name()->createe($dvd);
+
+}
+?>
 
 <body>
 <form id="product_form" method="POST">
@@ -62,7 +89,7 @@
             <div class="col-auto">
                 <select class="form-select" name="type" id="productType" required="required">
                     <option selected value="" disabled="disabled">Type Switcher</option>
-                    <option value="DVD">DVD</option>
+                    <option value="DVD">Dvd</option>
                     <option value="Furniture">Furniture</option>
                     <option value="Book">Book</option>
                 </select>
