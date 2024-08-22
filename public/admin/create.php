@@ -11,19 +11,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $product['price'] = $_POST['price'];
     $product['type'] = $_POST['type'];
 
-    $method_name = 'get'.$product['type'];
-
-    $height = $_POST['height']?? '';
-    $widht = $_POST['widht'] ?? '';
-    $length = $_POST['length'] ?? '';
-    $weight = $_POST['weight'] ?? '';
+    $attribute['size'] = $_POST['size'] ?? '';
+    $attribute['height'] = $_POST['height']?? '';
+    $attribute['width'] = $_POST['width'] ?? '';
+    $attribute['length'] = $_POST['length'] ?? '';
+    $attribute['weight'] = $_POST['weight'] ?? '';
 
     $cms->getProduct()->create($product);
 
-    $dvd['id'] = $cms->getProduct()->getLastInsertId();
-    $dvd['size'] = $_POST['size'] ?? '';
-
-    $cms->$method_name()->createe($dvd);
+    $attribute['id'] = $cms->getProduct()->getLastInsertId();
+    $method_name = 'get'.$product['type'];
+    $cms->$method_name()->createe($attribute);
 
 }
 ?>

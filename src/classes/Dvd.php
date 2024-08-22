@@ -1,5 +1,4 @@
 <?php
-namespace App\Cms;
 
 class Dvd extends Product
 {
@@ -9,10 +8,12 @@ class Dvd extends Product
     {
         parent::__construct($db);
     }
-    public function createe($dvd)
+    public function createe($arg)
     {
+        unset($arg['widht'], $arg['length'], $arg['height'], $arg['weight']);
         $sql = "INSERT INTO dvd_attributes (id , size)
         VALUES (:id , :size);";
-        return $this->db->runSql($sql , $dvd);
+
+        return $this->db->runSql($sql , $arg);
     }
 }

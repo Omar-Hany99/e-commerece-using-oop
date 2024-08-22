@@ -26,5 +26,13 @@ WHERE
 
         return $this->db->runSql($sql)->fetch();  // Return article
     }
+    public function createe($arg)
+    {
+        $sql = "INSERT INTO furniture_attributes (id , height , width , length)
+        VALUES (:id , :height , :width , :length);";
+        unset($arg['size'] , $arg['weight']);
+        return $this->db->runSql($sql , $arg);
+    }
+
 
 }

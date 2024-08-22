@@ -5,5 +5,11 @@ require APP_ROOT . '/config/config.php';
 require APP_ROOT . '/vendor/autoload.php';               // Autoload libraries
 
 
-$cms = new \App\Cms\CMS($dsn, $username, $password);              // Create CMS object
+spl_autoload_register(function($class)                   // Set autoload function
+{
+    $path = APP_ROOT . '/src/classes/';                  // Path to class definitions
+    require $path . $class . '.php';                     // Include class definition
+});
+
+$cms = new CMS($dsn, $username, $password);              // Create CMS object
 unset($dsn, $username, $password);                       // Remove database config data
