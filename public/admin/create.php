@@ -1,28 +1,53 @@
 <?php
 
-declare(strict_types=1);                                 // Use strict types
+declare(strict_types=1);
 $dest = '../';
 include '../includes/header.php';
-include '../../src/bootstrap.php';                       // Include setup file
+include '../../src/bootstrap.php';
+use App\CMS\Validate;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $product['sku'] = $_POST['sku'];
-    $product['name'] = $_POST['name'];
-    $product['price'] = $_POST['price'];
-    $product['type'] = $_POST['type'];
+$errors = ['sku' => '', 'name' => '', 'price' => '','size' => '', 'weight' => '', 'width' => '', 'length' => '', 'height' => '','warning' => ''];
 
-    $attribute['size'] = $_POST['size'] ?? '';
-    $attribute['height'] = $_POST['height']?? '';
-    $attribute['width'] = $_POST['width'] ?? '';
-    $attribute['length'] = $_POST['length'] ?? '';
-    $attribute['weight'] = $_POST['weight'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $cms->getProduct()->create($product);
+    $class = $cms->{'get' . $_POST['type']}();
 
-    $attribute['id'] = $cms->getProduct()->getLastInsertId();
-    $method_name = 'get'.$product['type'];
-    $cms->$method_name()->createe($attribute);
+    foreach ($_POST as $key => $value) {
+        $method = 'set' . $key;
+        $class->$method($value);
+    }
+    $errors['sku'] = Validate::isText($_POST['sku'], 1, 15)
+        ? '' : 'sku should be 1 - 15 characters.';
+    $errors['name'] = Validate::isText($_POST['name'], 1, 20)
+        ? '' : 'sku should be 1 - 25 characters.';
+    $errors['price'] = Validate::isNumber($_POST['price'], 1,  1000000)
+        ? '' : 'Price should be between 1 and 1,000,000.';
+    $errors['size'] = Validate::isNumber($_POST['size'] ?? true, 1,  1000000)
+        ? '' : 'Size should be between 1 and 1,000,000.';
+    $errors['weight'] = Validate::isNumber($_POST['weight'] ?? true, 1,  1000)
+        ? '' : 'Weight should be between 1 and 100.';
+    $errors['width'] = Validate::isNumber($_POST['width'] ?? true, 1,  1000)
+        ? '' : 'width should be between 1 and 1000.';
+    $errors['height'] = Validate::isNumber($_POST['height'] ?? true, 1,  1000)
+        ? '' : 'Height should be between 1 and 1000.';
+    $errors['length'] = Validate::isNumber($_POST['length'] ?? true, 1,  1000)
+        ? '' : 'Length should be between 1 and 1000.';
 
+    $invalid = implode($errors);
+
+    if ($invalid) {
+        $errors['warning'] = 'Please correct form errors';
+    } else {
+        $saved = $class->save($_POST);
+        if ($saved === true) {
+            header('Location: ../index.php');
+            exit();
+        }
+        if ($saved === false){
+            $errors['sku'] = 'sku already in use';
+
+        }
+    }
 }
 ?>
 
@@ -35,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <div>
         <button type="submit" class="btn btn-primary btn-lg">Save</button>
 
-        <a class="btn btn-secondary btn-lg" href="/">
+        <a class="btn btn-secondary btn-lg" href="../index.php">
             <span>Cancel</span>
         </a>
     </div>
@@ -48,15 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             </div>
             <div class="col-auto">
                 <input type="text" id="sku" name="sku" class="form-control" required>
-            </div>
+                <span class="errors"><?= $errors['sku'] ?></span>
 
-            <div class="col-auto">
-                <span class="form-text">
-                    <?= $data['skuIsEmpty'] ?? ''  ?>
-                </span>
-                <span class="form-text">
-                    <?= $data['skuIsDuplicated'] ?? ''  ?>
-                </span>
             </div>
 
         </div>
@@ -67,6 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             </div>
             <div class="col-auto">
                 <input type="text" id="name" name="name" class="form-control" required>
+                <span class="errors"><?= $errors['name'] ?></span>
+
             </div>
         </div>
         <br>
@@ -76,6 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             </div>
             <div class="col-auto">
                 <input type="number" id="price" name="price" class="form-control" required>
+                <span class="errors"><?= $errors['price'] ?></span>
+
             </div>
         </div>
         <br>
@@ -91,6 +113,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <option value="Furniture">Furniture</option>
                     <option value="Book">Book</option>
                 </select>
+                <div class="errors"><?= $errors['size'] ?></div>
+                <div class="errors"><?= $errors['weight'] ?></div>
+                <div class="errors"><?= $errors['width'] ?></div>
+                <div class="errors"><?= $errors['length'] ?></div>
+                <div class="errors"><?= $errors['height'] ?></div>
+
+
             </div>
 
         </div>

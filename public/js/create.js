@@ -8,6 +8,8 @@ $('#productType').on("change", function () {
                 </div>
                 <div class="col-auto">
                     <input type="number" id="size" name="size" class="form-control" aria-describedby="sizeHelpInLine" required>
+                                    <span class="errors"><?= $errors['size'] ?></span>
+
                 </div>
                   <div class="col-auto">
                     <span id="sizeHelpInLine" class="form-text">

@@ -1,16 +1,18 @@
 <?php
-class Database extends PDO
+
+namespace App\CMS;
+class Database extends \PDO
 {
     public function __construct(string $dsn, string $username, string $password, array $options = [])
     {
-        $default_options[PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_ASSOC; // Return data as array
-        $default_options[PDO::ATTR_EMULATE_PREPARES]   = false;            // Emulate prepares off
-        $default_options[PDO::ATTR_ERRMODE]            = PDO::ERRMODE_EXCEPTION; // Error settings
+        $default_options[\PDO::ATTR_DEFAULT_FETCH_MODE] = \PDO::FETCH_ASSOC; // Return data as array
+        $default_options[\PDO::ATTR_EMULATE_PREPARES]   = false;            // Emulate prepares off
+        $default_options[\PDO::ATTR_ERRMODE]            = \PDO::ERRMODE_EXCEPTION; // Error settings
         $options = array_replace($default_options, $options);      // Replace defaults if supplied
         parent::__construct($dsn, $username, $password, $options); // Create PDO object
     }
 
-    public function runSQL(string $sql, $arguments = null)
+    public function runSql(string $sql, $arguments = null)
     {
         if (!$arguments) {                               // If no arguments
             return $this->query($sql);                   // Run SQL, return PDOStatement object
@@ -20,4 +22,3 @@ class Database extends PDO
         return $statement;                               // Return PDOStatement object
     }
 }
-

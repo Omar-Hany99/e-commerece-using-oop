@@ -1,9 +1,17 @@
 <?php $title = 'Scandiweb';?>
 <?php include 'includes/header.php'; ?>
-<?php include '../src/bootstrap.php'; ?>
-<?php $product = $cms->getFurniture()->getProduct();?>
+<?php include __DIR__ . '/../src/bootstrap.php'; ?>
+<?php
+
+$books = $cms->getBook()->getBookProducts();
+$dvds = $cms->getDvd()->getDvdProducts();
+$furniture = $cms->getFurniture()->getFurnitureProducts();
+$products = array_merge($books, $dvds, $furniture);
+
+?>
+
 <body>
-<form method="POST" action="/product/delete">
+<form method="POST" action="admin/delete.php">
 <header>
     <p>
         Product List
@@ -19,17 +27,17 @@
 <hr class="header-hr"/>
 <section>
     <div class="product-list">
+        <?php foreach($products as $product){ ?>
         <div class="product">
             <div class="form-check checkbox">
-                <input class="form-check-input delete-checkbox" type="checkbox" name="">
+                <div class="form-check checkbox">
+                    <input class="form-check-input delete-checkbox" type="checkbox" name="selected_products[]" value='<?= json_encode(['id' => $product->getProductId(), 'type' => $product->getType()]) ?>'>
+                </div>
+
             </div>
-            <div class="product-data">
-                <p><?= $product['name']; ?></p>
-                <p>Acme DISC</p>
-                <p>1.00 $</p>
-                <p>Size: 700 MB</p>
-            </div>
+            <?= $product->print()?>
         </div>
+        <?php } ?>
     </div>
 </section>
 </form>
